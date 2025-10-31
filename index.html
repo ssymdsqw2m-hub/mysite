@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Website</title>
+  <style>
+    body {
+      font-family: system-ui, Arial, sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #e0f7fa, #f1f8e9);
+      color: #222;
+    }
+    .container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      padding: 2rem 2.5rem;
+      max-width: 800px;
+      width: 90%;
+      margin: 2rem;
+      line-height: 1.6;
+      animation: fadeIn 1s ease-in;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    h1 {
+      margin-bottom: 0.2rem;
+      color: #007acc;
+    }
+    h2 {
+      margin-top: 1.8rem;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 0.3rem;
+      color: #333;
+    }
+    ul {
+      padding-left: 1.2rem;
+    }
+    a {
+      color: #007acc;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    footer {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>My Website</h1>
+      <p>Welcome to my page.</p>
+    </header>
+
+    <section>
+      <h2>About</h2>
+      <p>This is a simple, clean webpage built using basic HTML and CSS. You can use this as a starting point for any personal or portfolio project.</p>
+    </section>
+
+    <section>
+      <h2>Projects</h2>
+      <ul>
+        <li>Project One – A short description of something interesting.</li>
+        <li>Project Two – Another example of what I’ve worked on.</li>
+        <li>Project Three – A placeholder for something creative.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Contact</h2>
+      <p>Add your contact links or keep this section simple.</p>
+    </section>
+
+    <footer>
+      <p>© 2025 My Website</p>
+    </footer>
+  </div>
+
+</body>
+</html>
