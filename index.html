@@ -1,108 +1,311 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Website</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stephen Esterle · Cybersecurity Portfolio</title>
+  <meta name="description" content="Cybersecurity projects, labs, and homelab work by Stephen Esterle (WCTC)." />
+  <meta name="color-scheme" content="dark light">
   <style>
+    :root {
+      --bg: #0b0f16;
+      --panel: #121826;
+      --ink: #e5f0ff;
+      --muted: #9fb0c7;
+      --accent: #58ffd9;   /* cyan */
+      --accent2: #8ab4ff;  /* blue */
+      --danger: #ff6b6b;
+      --ok: #8cff8a;
+      --ring: 0 0 0 1.5px rgba(88,255,217,.25), 0 10px 30px rgba(88,255,217,.08);
+    }
+
+    * { box-sizing: border-box }
+    html, body { height: 100% }
     body {
-      font-family: system-ui, Arial, sans-serif;
       margin: 0;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: linear-gradient(135deg, #e0f7fa, #f1f8e9);
-      color: #222;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      color: var(--ink);
+      background: radial-gradient(1200px 600px at 10% -10%, #122034 10%, transparent 60%),
+                  radial-gradient(1200px 800px at 110% 10%, #081a1a 0%, transparent 55%),
+                  linear-gradient(180deg, #0b0f16 0%, #0b0f16 100%);
+      background-attachment: fixed;
+      letter-spacing: .2px;
     }
-    .container {
-      background: #1e1e1e; /* Dark container background */
-      color: #f1f1f1; /* Light text inside */
-      border-radius: 16px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-      padding: 2rem 2.5rem;
-      max-width: 800px;
-      width: 90%;
-      margin: 2rem;
-      line-height: 1.6;
-      animation: fadeIn 1s ease-in;
-      transition: background 0.3s ease;
+
+    /* Subtle grid */
+    body::before {
+      content: ""; position: fixed; inset: 0; pointer-events: none;
+      background-image: linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
+      background-size: 40px 40px; mask-image: radial-gradient(90% 80% at 50% 20%, black, transparent 70%);
     }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 28px 20px 64px }
+
+    /* Top nav */
+    .nav {
+      display: flex; align-items: center; gap: 14px; justify-content: space-between; margin-bottom: 18px;
     }
-    header {
-      text-align: center;
-      margin-bottom: 1.5rem;
+    .brand { display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--ink) }
+    .brand .logo { width: 28px; height: 28px; border-radius: 8px; display:grid; place-items:center; background:#0d2130; box-shadow: var(--ring) }
+    .brand .logo svg { width:18px; height:18px; }
+    .brand span { font-weight: 700; letter-spacing: .5px }
+    .links a { color: var(--muted); text-decoration: none; margin-left: 18px }
+    .links a:hover { color: var(--accent) }
+
+    /* Hero */
+    .hero { position: relative; overflow: hidden; background: linear-gradient(180deg, rgba(18,24,38,.8), rgba(18,24,38,.6));
+            border:1px solid rgba(138,180,255,.15); border-radius: 16px; padding: 28px; box-shadow: var(--ring) }
+    .tag { display:inline-flex; gap:8px; align-items:center; padding:6px 10px; border-radius:999px; font-size:12px; color:var(--accent);
+           border:1px solid rgba(88,255,217,.3); background: rgba(88,255,217,.06) }
+    .hero h1 { margin: 14px 0 6px; font-size: clamp(26px, 4vw, 40px) }
+    .hero p { margin: 0 0 16px; color: var(--muted) }
+
+    .glitch {
+      position: relative; display: inline-block;
+      text-shadow: 0 0 12px rgba(88,255,217,.45);
     }
-    h1 {
-      margin-bottom: 0.2rem;
-      color: #4db8ff; /* Accent color for title */
+    .glitch::before, .glitch::after {
+      content: attr(data-text); position: absolute; left: 0; top: 0;
+      clip-path: inset(0 0 0 0); opacity: .35; filter: blur(.3px);
     }
-    h2 {
-      margin-top: 1.8rem;
-      border-bottom: 1px solid #444;
-      padding-bottom: 0.3rem;
-      color: #fff;
-    }
-    ul {
-      padding-left: 1.2rem;
-    }
-    a {
-      color: #4db8ff;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-    footer {
-      text-align: center;
-      margin-top: 2rem;
-      font-size: 0.9rem;
-      color: #aaa;
-    }
-    .gif {
-      display: block;
-      margin: 1rem auto;
-      width: 200px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    .glitch::before { transform: translate(1px,0); color: var(--accent) }
+    .glitch::after { transform: translate(-1px,0); color: var(--accent2) }
+
+    .hero-cta { display:flex; flex-wrap: wrap; gap: 10px; margin-top: 10px }
+    .btn { cursor: pointer; appearance:none; padding: 10px 14px; border-radius: 10px; border:1px solid rgba(138,180,255,.25);
+           background: #0f1726; color: var(--ink); text-decoration:none; font-weight:600 }
+    .btn:hover { border-color: rgba(88,255,217,.55); box-shadow: var(--ring) }
+    .btn.alt { background: rgba(88,255,217,.1); border-color: rgba(88,255,217,.4); color: var(--accent) }
+
+    /* Sections */
+    section { margin-top: 34px }
+    h2 { font-size: 18px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent2);
+         border-bottom: 1px dashed rgba(138,180,255,.25); padding-bottom: 8px; margin-bottom: 16px }
+
+    .kpis { display:grid; gap:12px; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)) }
+    .kpi { background: var(--panel); border:1px solid rgba(138,180,255,.15); border-radius: 14px; padding: 14px }
+    .kpi small { color: var(--muted) }
+
+    .grid { display:grid; gap:16px; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)) }
+    .card { background: var(--panel); border:1px solid rgba(138,180,255,.15); border-radius: 14px; padding: 16px; display:flex; flex-direction:column; gap:10px; position:relative }
+    .card .title { font-weight: 700 }
+    .meta { display:flex; flex-wrap: wrap; gap:6px }
+    .badge { font-size: 11px; padding:4px 8px; border-radius: 999px; color:#93e7ff; border:1px solid rgba(138,180,255,.25); background: rgba(138,180,255,.08) }
+    .badge.ok { color: var(--ok); border-color: rgba(140,255,138,.3); background: rgba(140,255,138,.08) }
+    .badge.danger { color: var(--danger); border-color: rgba(255,107,107,.3); background: rgba(255,107,107,.08) }
+
+    .card .desc { color: var(--muted); line-height: 1.5 }
+    .card .actions { margin-top: auto; display:flex; gap:8px; flex-wrap:wrap }
+    .card .actions a { font-size: 13px }
+
+    .skills { display:flex; gap:8px; flex-wrap:wrap }
+    .chip { font-size: 12px; padding:6px 10px; border-radius: 10px; background:#0f1726; border:1px solid rgba(138,180,255,.15); color: var(--muted) }
+
+    .foot { margin-top: 34px; color: var(--muted); text-align:center }
+    .foot a { color: var(--accent) }
+
+    /* Responsive tweaks */
+    @media (min-width: 900px) {
+      .hero { display:grid; grid-template-columns: 1.4fr .9fr; gap: 18px; align-items: center }
+      .hero .art { aspect-ratio: 1/1; border-radius: 14px; border:1px solid rgba(138,180,255,.15); background:
+        radial-gradient(180px 140px at 70% 30%, rgba(88,255,217,.12), transparent 60%),
+        radial-gradient(180px 140px at 40% 60%, rgba(138,180,255,.12), transparent 60%),
+        #0c1424; display:grid; place-items:center; position: relative; box-shadow: var(--ring) }
+      .scanline { position:absolute; inset:0; background: repeating-linear-gradient(
+          180deg, rgba(255,255,255,.03) 0px, rgba(255,255,255,.03) 1px, transparent 1px, transparent 3px);
+          mix-blend-mode: overlay; border-radius: inherit }
     }
   </style>
 </head>
 <body>
+  <div class="wrap">
+    <nav class="nav">
+      <a class="brand" href="#top">
+        <span class="logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2a7 7 0 0 0-7 7v2H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2h-1V9a7 7 0 0 0-7-7Zm0 2a5 5 0 0 1 5 5v2H7V9a5 5 0 0 1 5-5Z" fill="currentColor"/>
+          </svg>
+        </span>
+        <span>Stephen Esterle</span>
+      </a>
+      <div class="links">
+        <a href="#projects">Projects</a>
+        <a href="#labs">Labs & CTFs</a>
+        <a href="#skills">Skills</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </nav>
 
-  <div class="container">
-    <header>
-      <h1>My Website</h1>
-      <p>Welcome to my page.</p>
-      <img src="dance.gif" alt="dancing dec" class="gif">
+    <header id="top" class="hero">
+      <div>
+        <span class="tag">🧪 Blue/Red · Network · AppSec · Homelab</span>
+        <h1><span class="glitch" data-text="Cybersecurity Portfolio">Cybersecurity Portfolio</span></h1>
+        <p>
+          WCTC cybersecurity student with a hands‑on homelab. I build and break things: web apps, IDS rules, SIEM pipelines, and
+          dashboards—then document what worked (and what didn’t).
+        </p>
+        <div class="hero-cta">
+          <a class="btn" href="#projects">View Projects</a>
+          <a class="btn alt" href="#contact">Resume / Contact</a>
+        </div>
+        <div class="kpis" style="margin-top:14px">
+          <div class="kpi"><small>Last updated</small><div id="lastUpdated">—</div></div>
+          <div class="kpi"><small>Core Focus</small><div>Threat Detection · Web App Security · Homelab Ops</div></div>
+          <div class="kpi"><small>Status</small><div><span class="badge ok">Available for internships</span></div></div>
+        </div>
+      </div>
+      <div class="art" aria-hidden="true">
+        <!-- simple lock + radar animation -->
+        <svg viewBox="0 0 200 200" width="120" height="120" role="img" aria-label="lock icon">
+          <defs>
+            <linearGradient id="g" x1="0" x2="1">
+              <stop offset="0%" stop-color="#58ffd9"/>
+              <stop offset="100%" stop-color="#8ab4ff"/>
+            </linearGradient>
+          </defs>
+          <g fill="none" stroke="url(#g)" stroke-width="4">
+            <circle cx="100" cy="110" r="56" opacity=".25"/>
+            <rect x="64" y="96" width="72" height="56" rx="10"/>
+            <path d="M80 96v-14a20 20 0 0 1 40 0v14"/>
+            <circle cx="100" cy="124" r="6" />
+            <path d="M100 130v12"/>
+          </g>
+        </svg>
+        <div class="scanline"></div>
+      </div>
     </header>
 
-    <section>
-      <h2>Mom</h2>
-      <p>This is a simple, clean webpage built using basic HTML and CSS. You can use this as a starting point for any personal or portfolio project.</p>
-    </section>
-
-    <section>
+    <section id="projects">
       <h2>Projects</h2>
-      <ul>
-        <li>Project One – A short description of something interesting.</li>
-        <li>Project Two – Another example of what I’ve worked on.</li>
-        <li>Project Three – A placeholder for something creative.</li>
-      </ul>
+      <div class="grid" id="projectsGrid"></div>
     </section>
 
-    <section>
+    <section id="labs">
+      <h2>Labs & CTF Write‑ups</h2>
+      <div class="grid" id="labsGrid"></div>
+    </section>
+
+    <section id="skills">
+      <h2>Skills & Tech</h2>
+      <div class="skills" id="skillsChips"></div>
+    </section>
+
+    <section id="contact">
       <h2>Contact</h2>
-      <p>Add your contact links or keep this section simple.</p>
+      <div class="card">
+        <div class="desc">
+          Want details, a quick screenshare of the homelab, or my resume?
+        </div>
+        <div class="actions">
+          <a class="btn" href="#" id="resumeLink">Download Resume (PDF)</a>
+          <a class="btn" href="mailto:stephen@example.com">Email</a>
+          <a class="btn" href="https://github.com/your‑github" target="_blank" rel="noopener">GitHub</a>
+          <a class="btn" href="https://www.linkedin.com/in/your‑linkedin" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+      </div>
     </section>
 
-    <footer>
-      <p>© 2025 My Website</p>
-    </footer>
+    <p class="foot">© <span id="year"></span> Stephen Esterle • Built with plain HTML/CSS/JS • Hosted on GitHub Pages</p>
   </div>
 
+  <script>
+    // ---------- Content you edit ----------
+    const PROJECTS = [
+      {
+        title: "Discount Juice Shop (DJS)",
+        tags: ["Node/Express", "Auth", "XSS/SQLi/CSRF Mitigations"],
+        desc: "A training web app hardened with secure auth flows, input validation, parameterized queries, and Content Security Policy. Includes attacker vs defender write‑up.",
+        links: { github: "#", live: "#", writeup: "#" }
+      },
+      {
+        title: "Suricata Rule Pack",
+        tags: ["IDS", "Suricata", "EveBox"],
+        desc: "Custom detection rules for common web attacks and C2 beacons. Includes noisy‑rule tuning and alert triage dashboards in EveBox.",
+        links: { github: "#", writeup: "#" }
+      },
+      {
+        title: "ICS‑CERT Research: Siemens/PLC Notes",
+        tags: ["ICS", "Threat Research"],
+        desc: "Lightweight survey of Siemens S7 advisories, typical attack surfaces, and lab reproduction notes (safe, simulated).",
+        links: { writeup: "#" }
+      },
+      {
+        title: "Homelab: pfSense + Wazuh + Splunk",
+        tags: ["Homelab", "SIEM", "NIDS/NIPS"],
+        desc: "End‑to‑end home network with pfSense/OPNsense, Suricata, Wazuh, and Splunk. Covers ingest pipelines, dashboards, and alert response playbooks.",
+        links: { github: "#", screenshot: "#", writeup: "#" }
+      },
+      {
+        title: "AdGuard Home: Privacy‑First DNS",
+        tags: ["DNS", "Privacy", "Blocklists"],
+        desc: "Network‑wide ad/tracker blocking with HaGeZi and OISD lists, DNSSEC, and performance benchmarking.",
+        links: { github: "#", writeup: "#" }
+      }
+    ];
+
+    const LABS = [
+      {
+        title: "Cyber Command – Liber8tion",
+        tags: ["CTF", "Forensics"],
+        desc: "Timeline, IOC extraction, and final answer rationale.",
+        links: { writeup: "#" }
+      },
+      {
+        title: "SKY Log Analysis",
+        tags: ["Blue Team", "Log Analysis"],
+        desc: "Walkthrough of parsing, detection logic, and remediations.",
+        links: { writeup: "#" }
+      },
+      {
+        title: "NotPetya Wallet Analysis",
+        tags: ["Malware", "Intel"],
+        desc: "Indicators, wallet tracing notes, and hypotheses.",
+        links: { writeup: "#" }
+      }
+    ];
+
+    const SKILLS = [
+      "Linux, Docker, Compose, Portainer",
+      "pfSense/OPNsense, VLANs",
+      "Suricata, EveBox, Wazuh, Splunk",
+      "Nmap, Wireshark, Zeek (basics)",
+      "OWASP Top 10, Threat Modeling",
+      "Git/GitHub, CI basics",
+      "Python scripting (utility)"
+    ];
+
+    const RESUME_URL = "#"; // put your PDF link here
+
+    // ---------- Render helpers ----------
+    const el = (sel) => document.querySelector(sel);
+    const grid = (arr, mount, { showWriteup = true } = {}) => {
+      mount.innerHTML = arr.map(({title, tags, desc, links = {}}) => {
+        const t = (tags||[]).map(s => `<span class="badge">${s}</span>`).join("");
+        const a = [];
+        if (links.live) a.push(`<a class="btn" href="${links.live}" target="_blank" rel="noopener">Live</a>`);
+        if (links.github) a.push(`<a class="btn" href="${links.github}" target="_blank" rel="noopener">GitHub</a>`);
+        if (links.screenshot) a.push(`<a class="btn" href="${links.screenshot}" target="_blank" rel="noopener">Screenshot</a>`);
+        if (showWriteup && links.writeup) a.push(`<a class="btn alt" href="${links.writeup}" target="_blank" rel="noopener">Write‑up</a>`);
+        return `
+          <article class="card">
+            <div class="title">${title}</div>
+            <div class="meta">${t}</div>
+            <p class="desc">${desc}</p>
+            <div class="actions">${a.join("")}</div>
+          </article>
+        `;
+      }).join("");
+    };
+
+    grid(PROJECTS, el('#projectsGrid'));
+    grid(LABS, el('#labsGrid'));
+    el('#skillsChips').innerHTML = SKILLS.map(s => `<span class="chip">${s}</span>`).join("");
+
+    // Footer, meta
+    el('#year').textContent = new Date().getFullYear();
+    el('#lastUpdated').textContent = new Date().toLocaleDateString(undefined, { year:'numeric', month:'short', day:'2-digit' });
+    el('#resumeLink').href = RESUME_URL;
+  </script>
 </body>
 </html>
