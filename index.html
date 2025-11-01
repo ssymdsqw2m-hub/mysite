@@ -3,160 +3,187 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>stfn · Cybersecurity Portfolio</title>
-  <meta name="description" content="Cybersecurity projects, labs, and homelab work by stfn." />
-  <meta name="color-scheme" content="dark light">
+  <title>stfn · Cybersecurity</title>
+  <!-- Apple-like typography and spacing (no Apple branding) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet" />
   <style>
-    :root {
-      --bg: #0b0f16;
-      --panel: #121826;
-      --ink: #e5f0ff;
-      --muted: #9fb0c7;
-      --accent: #58ffd9;
-      --accent2: #8ab4ff;
-      --danger: #ff6b6b;
-      --ok: #8cff8a;
-      --ring: 0 0 0 1.5px rgba(88,255,217,.25), 0 10px 30px rgba(88,255,217,.08);
+    :root{
+      --ink:#f5f5f7; --muted:#a1a1a6; --bg:#000; --panel:#0b0b0c; --accent:#2997ff; --radius:18px;
     }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Inter, system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif; background:var(--bg); color:var(--ink); -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; overflow-x:hidden}
+    a{color:var(--accent); text-decoration:none}
 
-    * { box-sizing: border-box }
-    html, body { height: 100% }
-    body {
-      margin: 0;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-      color: var(--ink);
-      background: radial-gradient(1200px 600px at 10% -10%, #122034 10%, transparent 60%),
-                  radial-gradient(1200px 800px at 110% 10%, #081a1a 0%, transparent 55%),
-                  linear-gradient(180deg, #0b0f16 0%, #0b0f16 100%);
-      background-attachment: fixed;
-      letter-spacing: .2px;
-    }
+    /* Sticky translucent nav */
+    .nav-bar{position:sticky; top:0; z-index:10; backdrop-filter:saturate(180%) blur(16px); background:rgba(0,0,0,.6); border-bottom:1px solid rgba(255,255,255,.08)}
+    .navcontent{max-width:1200px; margin:0 auto; padding:0 20px}
+    .nav-belt{display:flex; align-items:center; justify-content:center; gap:18px; height:48px}
+    .nav-logo{font-weight:700; letter-spacing:.2px}
+    .nav-cont{opacity:.86}
+    .nav-cont:hover{opacity:1}
 
-    body::before {
-      content: ""; position: fixed; inset: 0; pointer-events: none;
-      background-image: linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
-      background-size: 40px 40px; mask-image: radial-gradient(90% 80% at 50% 20%, black, transparent 70%);
-    }
+    .banner{background:#111; border-bottom:1px solid rgba(255,255,255,.08)}
+    .banner .wrap{max-width:1000px; margin:0 auto; padding:10px 20px; text-align:center; color:var(--muted)}
 
-    .wrap { max-width: 1080px; margin: 0 auto; padding: 28px 20px 64px }
+    .section{min-height:92svh; display:grid; place-items:center; text-align:center; padding:40px 20px}
+    .sec-cont{max-width:1000px}
+    .sec-cont-head h1{font-size: clamp(40px, 7vw, 76px); line-height:1.05; margin:0 0 8px}
+    .sec-cont-head p{color:var(--muted); font-size: clamp(16px, 2vw, 22px); margin:0 0 16px}
+    .sec-cont-link{display:flex; gap:14px; justify-content:center; align-items:center}
+    .btn{appearance:none; padding:12px 16px; border-radius:12px; font-weight:600; border:1px solid rgba(255,255,255,.14); color:var(--ink); background:transparent}
+    .btn.primary{background:var(--ink); color:#000}
 
-    .nav {
-      display: flex; align-items: center; gap: 14px; justify-content: space-between; margin-bottom: 18px;
-    }
-    .brand { display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--ink) }
-    .brand .logo { width: 28px; height: 28px; border-radius: 8px; display:grid; place-items:center; background:#0d2130; box-shadow: var(--ring) }
-    .brand span { font-weight: 700; letter-spacing: .5px }
-    .links a { color: var(--muted); text-decoration: none; margin-left: 18px }
-    .links a:hover { color: var(--accent) }
+    /* Video hero */
+    .section2{position:relative; min-height:88svh; display:grid; place-items:center}
+    #BGVideo{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; filter:brightness(.6) saturate(1.1)}
+    .sec2-overlay{position:relative; z-index:1; background:rgba(0,0,0,.45); border:1px solid rgba(255,255,255,.14); padding:14px 18px; border-radius:14px; color:var(--ink)}
 
-    .hero { position: relative; overflow: hidden; background: linear-gradient(180deg, rgba(18,24,38,.8), rgba(18,24,38,.6));
-            border:1px solid rgba(138,180,255,.15); border-radius: 16px; padding: 28px; box-shadow: var(--ring); display: flex; flex-direction: column; align-items: center; text-align: center; }
+    /* Two-up product-style feature grid */
+    .section4{display:grid; grid-template-columns: repeat(auto-fit, minmax(320px,1fr)); gap:16px; padding:24px; max-width:1200px; margin:0 auto 40px}
+    .box{position:relative; border-radius:20px; overflow:hidden; border:1px solid rgba(255,255,255,.12); min-height:420px; background-position:center; background-size:cover; display:grid; align-items:end}
+    .box::after{content:""; position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,.0), rgba(0,0,0,.55) 65%)}
+    .box-cont{position:relative; z-index:1; padding:22px}
+    .box-cont h1{margin:0 0 6px}
+    .box-cont p{margin:0 0 10px; color:var(--muted)}
 
-    .hero img { width: 180px; border-radius: 12px; margin-top: 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+    /* Carousel (simple, no Bootstrap) */
+    .section7{max-width:1200px; margin:20px auto 60px; padding:0 20px}
+    .carousel{position:relative; border-radius:20px; overflow:hidden; border:1px solid rgba(255,255,255,.12)}
+    .carousel .track{display:flex; transition:transform .6s ease}
+    .carousel img{width:100%; flex:0 0 100%; display:block}
+    .carousel .controls{position:absolute; inset:0; display:flex; justify-content:space-between; align-items:center; padding:0 10px}
+    .ctrl{background:rgba(0,0,0,.35); border:1px solid rgba(255,255,255,.15); color:#fff; padding:8px 10px; border-radius:999px; cursor:pointer}
 
-    .tag { display:inline-flex; gap:8px; align-items:center; padding:6px 10px; border-radius:999px; font-size:12px; color:var(--accent);
-           border:1px solid rgba(88,255,217,.3); background: rgba(88,255,217,.06) }
-    .hero h1 { margin: 14px 0 6px; font-size: clamp(26px, 4vw, 40px) }
-    .hero p { margin: 0 0 16px; color: var(--muted) }
-
-    .glitch {
-      position: relative; display: inline-block;
-      text-shadow: 0 0 12px rgba(88,255,217,.45);
-    }
-
-    .hero-cta { display:flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; justify-content: center }
-    .btn { cursor: pointer; appearance:none; padding: 10px 14px; border-radius: 10px; border:1px solid rgba(138,180,255,.25);
-           background: #0f1726; color: var(--ink); text-decoration:none; font-weight:600 }
-    .btn:hover { border-color: rgba(88,255,217,.55); box-shadow: var(--ring) }
-    .btn.alt { background: rgba(88,255,217,.1); border-color: rgba(88,255,217,.4); color: var(--accent) }
-
-    section { margin-top: 34px }
-    h2 { font-size: 18px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent2);
-         border-bottom: 1px dashed rgba(138,180,255,.25); padding-bottom: 8px; margin-bottom: 16px }
-
-    .grid { display:grid; gap:16px; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)) }
-    .card { background: var(--panel); border:1px solid rgba(138,180,255,.15); border-radius: 14px; padding: 16px; display:flex; flex-direction:column; gap:10px; position:relative }
-    .card .title { font-weight: 700 }
-    .meta { display:flex; flex-wrap: wrap; gap:6px }
-    .badge { font-size: 11px; padding:4px 8px; border-radius: 999px; color:#93e7ff; border:1px solid rgba(138,180,255,.25); background: rgba(138,180,255,.08) }
-    .card .desc { color: var(--muted); line-height: 1.5 }
-    .card .actions { margin-top: auto; display:flex; gap:8px; flex-wrap:wrap }
-    .card .actions a { font-size: 13px }
-
-    .skills { display:flex; gap:8px; flex-wrap:wrap }
-    .chip { font-size: 12px; padding:6px 10px; border-radius: 10px; background:#0f1726; border:1px solid rgba(138,180,255,.15); color: var(--muted) }
-
-    .foot { margin-top: 34px; color: var(--muted); text-align:center }
-    .foot a { color: var(--accent) }
+    footer{border-top:1px solid rgba(255,255,255,.08); color:var(--muted); text-align:center; padding:30px 16px}
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <nav class="nav">
-      <a class="brand" href="#top">
-        <span class="logo"></span>
-        <span>stfn</span>
-      </a>
-      <div class="links">
-        <a href="#projects">Projects</a>
-        <a href="#labs">Labs & CTFs</a>
-        <a href="#skills">Skills</a>
-        <a href="#contact">Contact</a>
-      </div>
-    </nav>
-
-    <header id="top" class="hero">
-      <span class="tag">🧪 Blue/Red · Network · AppSec · Homelab</span>
-      <h1><span class="glitch" data-text="Cybersecurity Portfolio">Cybersecurity Portfolio</span></h1>
-      <p>
-        Hands-on cybersecurity builder with a full homelab. I build and break things: web apps, IDS rules, SIEM pipelines, and dashboards—then document what worked (and what didn’t).
-      </p>
-      <img src="dance.gif" alt="dance gif" />
-      <div class="hero-cta">
-        <a class="btn" href="#projects">View Projects</a>
-        <a class="btn alt" href="#contact">Resume / Contact</a>
+  <div class="wrapper">
+    <header class="nav-bar">
+      <div class="navcontent">
+        <div class="nav-belt">
+          <div class="nav-logo">stfn</div>
+          <a class="nav-cont" href="#projects">Projects</a>
+          <a class="nav-cont" href="#labs">Labs</a>
+          <a class="nav-cont" href="#skills">Skills</a>
+          <a class="nav-cont" href="#contact">Contact</a>
+        </div>
       </div>
     </header>
 
-    <section id="projects">
-      <h2>Projects</h2>
-      <div class="grid" id="projectsGrid"></div>
-    </section>
+    <div class="banner">
+      <div class="wrap">Available for internships • Threat detection, web app security, and homelab ops</div>
+    </div>
 
-    <section id="labs">
-      <h2>Labs & CTF Write-ups</h2>
-      <div class="grid" id="labsGrid"></div>
-    </section>
-
-    <section id="skills">
-      <h2>Skills & Tech</h2>
-      <div class="skills" id="skillsChips"></div>
-    </section>
-
-    <section id="contact">
-      <h2>Contact</h2>
-      <div class="card">
-        <div class="desc">
-          Want details, a quick screenshare of the homelab, or my resume?
+    <!-- HERO (Apple-style) -->
+    <div class="section" id="top">
+      <div class="sec-cont">
+        <div class="sec-cont-head">
+          <h1>Threat Detection</h1>
+          <p>Signal, not noise. Rules, pipelines, and dashboards that surface what matters fast.</p>
         </div>
-        <div class="actions">
-          <a class="btn" href="#" id="resumeLink">Download Resume (PDF)</a>
-          <a class="btn" href="mailto:stfn@example.com">Email</a>
-          <a class="btn" href="https://github.com/your-github" target="_blank" rel="noopener">GitHub</a>
-          <a class="btn" href="https://www.linkedin.com/in/your-linkedin" target="_blank" rel="noopener">LinkedIn</a>
+        <div class="sec-cont-link">
+          <a class="btn primary" href="#projects">See projects</a>
+          <a class="btn" href="#contact">Get in touch</a>
         </div>
       </div>
-    </section>
+    </div>
 
-    <p class="foot">© <span id="year"></span> stfn • Built with plain HTML/CSS/JS • Hosted on GitHub Pages</p>
+    <!-- VIDEO / HERO 2 (uses your dance.gif or a short mp4) -->
+    <div class="section2">
+      <video autoplay muted loop playsinline id="BGVideo">
+        <source src="dance.mp4" type="video/mp4" />
+      </video>
+      <div class="sec2-overlay">
+        <p class="text-center">Watch the homelab fly‑through (00:20)</p>
+      </div>
+    </div>
+
+    <!-- FEATURE PANELS (Apple-like two-up cards) -->
+    <div class="section4" id="projects">
+      <div class="box" style="background-image:url('project_suricata.jpg')">
+        <div class="box-cont">
+          <h1>Suricata Rule Pack</h1>
+          <p>Detection engineering for C2 & web attacks. Tuned for low noise. EveBox triage.</p>
+          <div class="sec-cont-link">
+            <a class="btn" href="#">GitHub</a>
+            <a class="btn" href="#">Write‑up</a>
+          </div>
+        </div>
+      </div>
+      <div class="box" style="background-image:url('project_djs.jpg')">
+        <div class="box-cont">
+          <h1>Discount Juice Shop</h1>
+          <p>AppSec hardening: auth fixes, parameterized SQL, CSP, and validation.</p>
+          <div class="sec-cont-link">
+            <a class="btn" href="#">GitHub</a>
+            <a class="btn" href="#">Live</a>
+          </div>
+        </div>
+      </div>
+      <div class="box" style="background-image:url('project_homelab.jpg')">
+        <div class="box-cont">
+          <h1>Homelab SIEM</h1>
+          <p>pfSense · Wazuh · Splunk · Suricata. Ingest pipelines and dashboards.</p>
+          <div class="sec-cont-link">
+            <a class="btn" href="#">Architecture</a>
+            <a class="btn" href="#">Screens</a>
+          </div>
+        </div>
+      </div>
+      <div class="box" style="background-image:url('project_dns.jpg')">
+        <div class="box-cont">
+          <h1>AdGuard DNS</h1>
+          <p>Privacy‑first network‑wide blocking with HaGeZi/OISD and DNSSEC.</p>
+          <div class="sec-cont-link">
+            <a class="btn" href="#">Notes</a>
+            <a class="btn" href="#">Benchmarks</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carousel for screenshots -->
+    <div class="section7" id="labs">
+      <div class="carousel" id="carousel">
+        <div class="track" id="track">
+          <img src="lab1.png" alt="Liber8tion" />
+          <img src="lab2.png" alt="SKY Log" />
+          <img src="lab3.png" alt="NotPetya Wallet" />
+        </div>
+        <div class="controls">
+          <button class="ctrl" id="prev" aria-label="Previous">‹</button>
+          <button class="ctrl" id="next" aria-label="Next">›</button>
+        </div>
+      </div>
+    </div>
+
+    <footer id="contact">
+      <p>© <span id="year"></span> stfn — Built with plain HTML/CSS/JS • Hosted on GitHub Pages</p>
+      <p>
+        <a href="mailto:stfn@example.com">Email</a> ·
+        <a href="#" id="resumeLink">Resume (PDF)</a> ·
+        <a href="https://github.com/your-github" target="_blank" rel="noopener">GitHub</a> ·
+        <a href="https://www.linkedin.com/in/your-linkedin" target="_blank" rel="noopener">LinkedIn</a>
+      </p>
+    </footer>
   </div>
 
   <script>
-    const PROJECTS = [];
-    const LABS = [];
-    const SKILLS = [];
+    // Simple carousel logic (no jQuery/Bootstrap)
+    const track = document.getElementById('track');
+    const slides = Array.from(track.children);
+    let index = 0;
+    const move = (i)=>{ index = (i+slides.length)%slides.length; track.style.transform = `translateX(-${index*100}%)` };
+    document.getElementById('prev').onclick = ()=>move(index-1);
+    document.getElementById('next').onclick = ()=>move(index+1);
+
+    // Year + Resume link
     document.getElementById('year').textContent = new Date().getFullYear();
+    document.getElementById('resumeLink').href = '#'; // set your PDF
   </script>
 </body>
 </html>
