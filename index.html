@@ -1,189 +1,423 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>stfn · Cybersecurity</title>
-  <!-- Apple-like typography and spacing (no Apple branding) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>stfn · Cybersecurity Portfolio</title>
+  <meta name="description" content="stfn — Cybersecurity projects, labs, and homelab work." />
+  <meta name="color-scheme" content="dark light" />
   <style>
+    /* ============ THEME TOKENS ============ */
     :root{
-      --ink:#f5f5f7; --muted:#a1a1a6; --bg:#000; --panel:#0b0b0c; --accent:#2997ff; --radius:18px;
+      --bg:#0b0f16;
+      --panel:#121826;
+      --ink:#e6eefc;
+      --muted:#9fb0c7;
+      --accent:#2997ff;
+      --ok:#8cff8a;
+      --ring:0 0 0 1px rgba(138,180,255,.16), 0 12px 30px rgba(0,0,0,.35);
+      --radius:16px;
     }
+    /* Light mode when the toggle is checked (pure CSS via :has) */
+    html:has(#theme-toggle:checked){
+      --bg:#ffffff;
+      --panel:#f6f8fb;
+      --ink:#121826;
+      --muted:#556277;
+      --accent:#0059ff;
+      --ring:0 0 0 1px rgba(0,89,255,.14), 0 10px 30px rgba(0,0,0,.08);
+    }
+
+    /* ============ GLOBAL ============ */
     *{box-sizing:border-box}
     html,body{height:100%}
-    body{margin:0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Inter, system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif; background:var(--bg); color:var(--ink); -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; overflow-x:hidden}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: var(--bg);
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      overflow-x:hidden;
+    }
     a{color:var(--accent); text-decoration:none}
+    img{max-width:100%; height:auto; display:block}
 
-    /* Sticky translucent nav */
-    .nav-bar{position:sticky; top:0; z-index:10; backdrop-filter:saturate(180%) blur(16px); background:rgba(0,0,0,.6); border-bottom:1px solid rgba(255,255,255,.08)}
-    .navcontent{max-width:1200px; margin:0 auto; padding:0 20px}
-    .nav-belt{display:flex; align-items:center; justify-content:center; gap:18px; height:48px}
-    .nav-logo{font-weight:700; letter-spacing:.2px}
-    .nav-cont{opacity:.86}
-    .nav-cont:hover{opacity:1}
+    .wrap{max-width:1100px; margin:0 auto; padding:0 20px}
 
-    .banner{background:#111; border-bottom:1px solid rgba(255,255,255,.08)}
-    .banner .wrap{max-width:1000px; margin:0 auto; padding:10px 20px; text-align:center; color:var(--muted)}
+    /* ============ NAVBAR ============ */
+    .nav{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter: saturate(180%) blur(16px);
+      background: color-mix(in oklab, var(--bg) 85%, transparent);
+      border-bottom: 1px solid color-mix(in oklab, var(--ink) 10%, transparent);
+    }
+    .nav-inner{height:56px; display:flex; align-items:center; justify-content:space-between; gap:14px}
+    .brand{font-weight:700; letter-spacing:.4px}
+    .nav a{padding:8px 10px; border-radius:10px; color:var(--ink); opacity:.9}
+    .nav a:hover{opacity:1}
+    .right{display:flex; align-items:center; gap:10px}
 
-    .section{min-height:92svh; display:grid; place-items:center; text-align:center; padding:40px 20px}
-    .sec-cont{max-width:1000px}
-    .sec-cont-head h1{font-size: clamp(40px, 7vw, 76px); line-height:1.05; margin:0 0 8px}
-    .sec-cont-head p{color:var(--muted); font-size: clamp(16px, 2vw, 22px); margin:0 0 16px}
-    .sec-cont-link{display:flex; gap:14px; justify-content:center; align-items:center}
-    .btn{appearance:none; padding:12px 16px; border-radius:12px; font-weight:600; border:1px solid rgba(255,255,255,.14); color:var(--ink); background:transparent}
-    .btn.primary{background:var(--ink); color:#000}
+    /* Theme switch (no JS) */
+    .switch{display:inline-flex; align-items:center; gap:8px; font-size:12px; color:var(--muted)}
+    .switch input{display:none}
+    .toggle{
+      width:40px; height:22px; border-radius:999px; position:relative;
+      background: color-mix(in oklab, var(--ink) 12%, transparent);
+      box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ink) 16%, transparent);
+      cursor:pointer; display:inline-block;
+    }
+    .toggle::after{
+      content:""; position:absolute; top:3px; left:3px; width:16px; height:16px; border-radius:50%;
+      background: var(--ink);
+      transition: transform .25s ease;
+    }
+    #theme-toggle:checked + .toggle::after{ transform: translateX(18px); }
 
-    /* Video hero */
-    .section2{position:relative; min-height:88svh; display:grid; place-items:center}
-    #BGVideo{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; filter:brightness(.6) saturate(1.1)}
-    .sec2-overlay{position:relative; z-index:1; background:rgba(0,0,0,.45); border:1px solid rgba(255,255,255,.14); padding:14px 18px; border-radius:14px; color:var(--ink)}
+    /* ============ HERO ============ */
+    .hero{
+      padding:54px 0 28px; text-align:center;
+    }
+    .tag{display:inline-flex; gap:8px; align-items:center; padding:6px 10px; border-radius:999px;
+         font-size:12px; color:var(--accent);
+         border:1px solid color-mix(in oklab, var(--accent) 35%, transparent);
+         background: color-mix(in oklab, var(--accent) 8%, transparent);}
+    h1{font-size: clamp(36px, 6vw, 64px); line-height:1.05; margin:12px 0 6px}
+    .lead{color:var(--muted); font-size: clamp(16px, 2vw, 20px); margin:0 auto 16px; max-width:820px}
 
-    /* Two-up product-style feature grid */
-    .section4{display:grid; grid-template-columns: repeat(auto-fit, minmax(320px,1fr)); gap:16px; padding:24px; max-width:1200px; margin:0 auto 40px}
-    .box{position:relative; border-radius:20px; overflow:hidden; border:1px solid rgba(255,255,255,.12); min-height:420px; background-position:center; background-size:cover; display:grid; align-items:end}
-    .box::after{content:""; position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,.0), rgba(0,0,0,.55) 65%)}
-    .box-cont{position:relative; z-index:1; padding:22px}
-    .box-cont h1{margin:0 0 6px}
-    .box-cont p{margin:0 0 10px; color:var(--muted)}
+    .cta{display:flex; gap:10px; justify-content:center; flex-wrap:wrap}
+    .btn{appearance:none; padding:12px 16px; border-radius:12px; font-weight:600; cursor:pointer;
+         border:1px solid color-mix(in oklab, var(--ink) 18%, transparent); color:var(--ink); background:transparent}
+    .btn.primary{background:var(--ink); color:var(--bg)}
+    .btn:hover{box-shadow: var(--ring)}
 
-    /* Carousel (simple, no Bootstrap) */
-    .section7{max-width:1200px; margin:20px auto 60px; padding:0 20px}
-    .carousel{position:relative; border-radius:20px; overflow:hidden; border:1px solid rgba(255,255,255,.12)}
-    .carousel .track{display:flex; transition:transform .6s ease}
-    .carousel img{width:100%; flex:0 0 100%; display:block}
-    .carousel .controls{position:absolute; inset:0; display:flex; justify-content:space-between; align-items:center; padding:0 10px}
-    .ctrl{background:rgba(0,0,0,.35); border:1px solid rgba(255,255,255,.15); color:#fff; padding:8px 10px; border-radius:999px; cursor:pointer}
+    /* ============ TABS (CSS-only) ============ */
+    .tabs{margin:30px 0 12px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap}
+    .tabs input{display:none}
+    .tabs label{
+      padding:8px 12px; border-radius:10px; cursor:pointer; font-weight:600; color:var(--muted);
+      border:1px solid color-mix(in oklab, var(--ink) 16%, transparent);
+    }
+    /* active state */
+    #tab-projects:checked ~ .tabs label[for="tab-projects"],
+    #tab-labs:checked     ~ .tabs label[for="tab-labs"],
+    #tab-writing:checked  ~ .tabs label[for="tab-writing"]{
+      color: var(--ink); background: color-mix(in oklab, var(--ink) 6%, transparent);
+    }
 
-    footer{border-top:1px solid rgba(255,255,255,.08); color:var(--muted); text-align:center; padding:30px 16px}
+    /* panels */
+    .panel{display:none}
+    #tab-projects:checked ~ #panel-projects,
+    #tab-labs:checked     ~ #panel-labs,
+    #tab-writing:checked  ~ #panel-writing{
+      display:block;
+      animation: fadeIn .5s ease both;
+    }
+    @keyframes fadeIn{ from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none} }
+
+    /* ============ FILTERS (CSS :has) ============ */
+    .filters{display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin:10px 0 20px}
+    .filters input{display:none}
+    .filters label{
+      font-size:12px; padding:6px 10px; border-radius:999px; cursor:pointer; color:var(--muted);
+      border:1px solid color-mix(in oklab, var(--ink) 16%, transparent);
+    }
+    /* Active chips */
+    #f-appsec:checked + label, #f-ids:checked + label, #f-homelab:checked + label{
+      color:var(--accent); border-color: color-mix(in oklab, var(--accent) 45%, transparent);
+    }
+    /* Filtering logic */
+    /* Show all by default; if any filter is checked, hide non-matching cards */
+    .cards{display:grid; gap:16px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));}
+    .card{
+      background: var(--panel); border:1px solid color-mix(in oklab, var(--ink) 14%, transparent);
+      border-radius: var(--radius); padding:16px; display:flex; flex-direction:column; gap:10px; position:relative;
+    }
+    .card .title{font-weight:700}
+    .card .desc{color:var(--muted)}
+    .meta{display:flex; gap:8px; flex-wrap:wrap}
+    .chip{font-size:11px; padding:5px 8px; border-radius:999px; border:1px solid color-mix(in oklab, var(--ink) 16%, transparent); color:var(--muted)}
+
+    /* Filter rules using :has() on html to react to checkbox state */
+    html:has(#f-appsec:checked) .cards .card:not([data-tags~="appsec"]){ display:none }
+    html:has(#f-ids:checked)    .cards .card:not([data-tags~="ids"]){ display:none }
+    html:has(#f-homelab:checked).cards .card:not([data-tags~="homelab"]){ display:none }
+    /* If multiple are checked, we want union (any match shows).
+       We’ll re-show matches for each checked filter: */
+    html:has(#f-appsec:checked) .cards .card[data-tags~="appsec"]{ display:flex }
+    html:has(#f-ids:checked)    .cards .card[data-tags~="ids"]{ display:flex }
+    html:has(#f-homelab:checked).cards .card[data-tags~="homelab"]{ display:flex }
+
+    /* Hover "flip" detail preview (CSS only) */
+    .card .preview{border-radius:12px; overflow:hidden; border:1px dashed color-mix(in oklab, var(--ink) 18%, transparent); aspect-ratio: 16/9; background: color-mix(in oklab, var(--ink) 6%, transparent); display:grid; place-items:center}
+    .card:hover .preview{border-style:solid}
+
+    .actions{display:flex; gap:8px; flex-wrap:wrap; margin-top:auto}
+    .actions a{font-size:13px}
+
+    /* ============ MODALS (CSS :target) ============ */
+    .modal{position:fixed; inset:0; display:grid; place-items:center; padding:20px; background:rgba(0,0,0,.55);
+           visibility:hidden; opacity:0; transition:opacity .25s ease, visibility .25s step-end; z-index:60}
+    .modal:target{visibility:visible; opacity:1; transition:opacity .25s ease}
+    .dialog{max-width:820px; width:100%; background:var(--panel); color:var(--ink);
+            border:1px solid color-mix(in oklab, var(--ink) 16%, transparent); border-radius:16px; padding:18px; position:relative}
+    .close{position:absolute; top:10px; right:12px; font-size:22px; line-height:1; padding:2px 8px; border-radius:10px;
+           color:var(--muted); border:1px solid color-mix(in oklab, var(--ink) 16%, transparent)}
+    .close:hover{color:var(--ink)}
+    .dialog h3{margin:0 0 8px}
+    .dialog p{margin:0 0 8px; color:var(--muted)}
+
+    /* ============ SKILLS (details/summary) ============ */
+    details{border:1px solid color-mix(in oklab, var(--ink) 16%, transparent); border-radius:12px; padding:12px}
+    details+details{margin-top:10px}
+    summary{cursor:pointer; font-weight:600}
+    summary::-webkit-details-marker{display:none}
+    summary::after{content:"▸"; float:right; color:var(--muted)}
+    details[open] summary::after{content:"▾"}
+
+    /* ============ FOOTER ============ */
+    footer{margin:34px 0 26px; text-align:center; color:var(--muted)}
   </style>
 </head>
 <body>
-  <div class="wrapper">
-    <header class="nav-bar">
-      <div class="navcontent">
-        <div class="nav-belt">
-          <div class="nav-logo">stfn</div>
-          <a class="nav-cont" href="#projects">Projects</a>
-          <a class="nav-cont" href="#labs">Labs</a>
-          <a class="nav-cont" href="#skills">Skills</a>
-          <a class="nav-cont" href="#contact">Contact</a>
-        </div>
-      </div>
-    </header>
-
-    <div class="banner">
-      <div class="wrap">Available for internships • Threat detection, web app security, and homelab ops</div>
-    </div>
-
-    <!-- HERO (Apple-style) -->
-    <div class="section" id="top">
-      <div class="sec-cont">
-        <div class="sec-cont-head">
-          <h1>Threat Detection</h1>
-          <p>Signal, not noise. Rules, pipelines, and dashboards that surface what matters fast.</p>
-        </div>
-        <div class="sec-cont-link">
-          <a class="btn primary" href="#projects">See projects</a>
-          <a class="btn" href="#contact">Get in touch</a>
-        </div>
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="wrap nav-inner">
+      <div class="brand">stfn</div>
+      <div class="right">
+        <a href="#projects">Projects</a>
+        <a href="#labs">Labs</a>
+        <a href="#writing">Writing</a>
+        <a href="#contact">Contact</a>
+        <label class="switch" title="Toggle theme">
+          <input id="theme-toggle" type="checkbox" />
+          <span class="toggle" aria-hidden="true"></span> Theme
+        </label>
       </div>
     </div>
+  </nav>
 
-    <!-- VIDEO / HERO 2 (uses your dance.gif or a short mp4) -->
-    <div class="section2">
-      <video autoplay muted loop playsinline id="BGVideo">
-        <source src="dance.mp4" type="video/mp4" />
-      </video>
-      <div class="sec2-overlay">
-        <p class="text-center">Watch the homelab fly‑through (00:20)</p>
+  <!-- HERO -->
+  <header class="hero">
+    <div class="wrap">
+      <span class="tag">Blue/Red • AppSec • Detection • Homelab</span>
+      <h1>Cybersecurity, built like a product.</h1>
+      <p class="lead">I harden apps, write IDS rules, wire up SIEM pipelines, and run a homelab that breaks and rebuilds—clean.</p>
+      <div class="cta">
+        <a class="btn primary" href="#projects">See projects</a>
+        <a class="btn" href="#contact">Get in touch</a>
       </div>
     </div>
+  </header>
 
-    <!-- FEATURE PANELS (Apple-like two-up cards) -->
-    <div class="section4" id="projects">
-      <div class="box" style="background-image:url('project_suricata.jpg')">
-        <div class="box-cont">
-          <h1>Suricata Rule Pack</h1>
-          <p>Detection engineering for C2 & web attacks. Tuned for low noise. EveBox triage.</p>
-          <div class="sec-cont-link">
-            <a class="btn" href="#">GitHub</a>
-            <a class="btn" href="#">Write‑up</a>
+  <!-- TABS -->
+  <div class="wrap">
+    <!-- hidden radios control which panel shows -->
+    <input type="radio" name="tab" id="tab-projects" checked hidden>
+    <input type="radio" name="tab" id="tab-labs" hidden>
+    <input type="radio" name="tab" id="tab-writing" hidden>
+
+    <div class="tabs">
+      <label for="tab-projects">Projects</label>
+      <label for="tab-labs">Labs & CTFs</label>
+      <label for="tab-writing">Writing</label>
+    </div>
+
+    <!-- PROJECTS PANEL -->
+    <section id="panel-projects" class="panel">
+      <!-- Filters (CSS only, union logic) -->
+      <div class="filters" id="projects">
+        <input type="checkbox" id="f-appsec" hidden><label for="f-appsec">AppSec</label>
+        <input type="checkbox" id="f-ids" hidden><label for="f-ids">IDS/Detection</label>
+        <input type="checkbox" id="f-homelab" hidden><label for="f-homelab">Homelab</label>
+      </div>
+
+      <div class="cards">
+        <!-- Example Project 1 -->
+        <article class="card" data-tags="ids homelab">
+          <div class="title">Suricata Rule Pack</div>
+          <div class="meta">
+            <span class="chip">EveBox</span><span class="chip">C2/Web</span><span class="chip">Tuning</span>
           </div>
-        </div>
-      </div>
-      <div class="box" style="background-image:url('project_djs.jpg')">
-        <div class="box-cont">
-          <h1>Discount Juice Shop</h1>
-          <p>AppSec hardening: auth fixes, parameterized SQL, CSP, and validation.</p>
-          <div class="sec-cont-link">
-            <a class="btn" href="#">GitHub</a>
-            <a class="btn" href="#">Live</a>
+          <div class="preview"><em>Drop a screenshot: <code>project_suricata.jpg</code></em></div>
+          <p class="desc">Rules for common web attacks and C2. Tuned to reduce noise; EveBox triage workflow included.</p>
+          <div class="actions">
+            <a href="#" class="btn">GitHub</a>
+            <a href="#modal-suricata" class="btn">Details</a>
           </div>
-        </div>
-      </div>
-      <div class="box" style="background-image:url('project_homelab.jpg')">
-        <div class="box-cont">
-          <h1>Homelab SIEM</h1>
-          <p>pfSense · Wazuh · Splunk · Suricata. Ingest pipelines and dashboards.</p>
-          <div class="sec-cont-link">
-            <a class="btn" href="#">Architecture</a>
-            <a class="btn" href="#">Screens</a>
-          </div>
-        </div>
-      </div>
-      <div class="box" style="background-image:url('project_dns.jpg')">
-        <div class="box-cont">
-          <h1>AdGuard DNS</h1>
-          <p>Privacy‑first network‑wide blocking with HaGeZi/OISD and DNSSEC.</p>
-          <div class="sec-cont-link">
-            <a class="btn" href="#">Notes</a>
-            <a class="btn" href="#">Benchmarks</a>
-          </div>
-        </div>
-      </div>
-    </div>
+        </article>
 
-    <!-- Carousel for screenshots -->
-    <div class="section7" id="labs">
-      <div class="carousel" id="carousel">
-        <div class="track" id="track">
-          <img src="lab1.png" alt="Liber8tion" />
-          <img src="lab2.png" alt="SKY Log" />
-          <img src="lab3.png" alt="NotPetya Wallet" />
-        </div>
-        <div class="controls">
-          <button class="ctrl" id="prev" aria-label="Previous">‹</button>
-          <button class="ctrl" id="next" aria-label="Next">›</button>
-        </div>
-      </div>
-    </div>
+        <!-- Example Project 2 -->
+        <article class="card" data-tags="appsec">
+          <div class="title">Discount Juice Shop (hardened)</div>
+          <div class="meta">
+            <span class="chip">CSP</span><span class="chip">Param SQL</span><span class="chip">Input Validation</span>
+          </div>
+          <div class="preview"><em>Screenshot: <code>project_djs.jpg</code></em></div>
+          <p class="desc">Auth fixes, parameterized SQL, Content Security Policy, and validation mapped to OWASP.</p>
+          <div class="actions">
+            <a href="#" class="btn">GitHub</a>
+            <a href="#" class="btn">Live</a>
+            <a href="#modal-djs" class="btn">Details</a>
+          </div>
+        </article>
 
-    <footer id="contact">
-      <p>© <span id="year"></span> stfn — Built with plain HTML/CSS/JS • Hosted on GitHub Pages</p>
-      <p>
-        <a href="mailto:stfn@example.com">Email</a> ·
-        <a href="#" id="resumeLink">Resume (PDF)</a> ·
-        <a href="https://github.com/your-github" target="_blank" rel="noopener">GitHub</a> ·
-        <a href="https://www.linkedin.com/in/your-linkedin" target="_blank" rel="noopener">LinkedIn</a>
-      </p>
-    </footer>
+        <!-- Example Project 3 -->
+        <article class="card" data-tags="homelab ids">
+          <div class="title">Homelab SIEM</div>
+          <div class="meta">
+            <span class="chip">pfSense</span><span class="chip">Wazuh</span><span class="chip">Splunk</span>
+          </div>
+          <div class="preview"><em>Diagram: <code>project_homelab.jpg</code></em></div>
+          <p class="desc">Segmentation, ingest pipelines, and dashboards that surface the right events fast.</p>
+          <div class="actions">
+            <a href="#" class="btn">Architecture</a>
+            <a href="#" class="btn">Screens</a>
+          </div>
+        </article>
+
+        <!-- Example Project 4 -->
+        <article class="card" data-tags="homelab appsec">
+          <div class="title">AdGuard DNS (privacy-first)</div>
+          <div class="meta">
+            <span class="chip">HaGeZi</span><span class="chip">OISD</span><span class="chip">DNSSEC</span>
+          </div>
+          <div class="preview"><em>Metrics: <code>project_dns.jpg</code></em></div>
+          <p class="desc">Network-wide ad/tracker blocking with performance benchmarks and DNSSEC.</p>
+          <div class="actions">
+            <a href="#" class="btn">Notes</a>
+            <a href="#" class="btn">Benchmarks</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- LABS PANEL -->
+    <section id="panel-labs" class="panel" aria-labelledby="labs">
+      <div class="cards" id="labs">
+        <article class="card">
+          <div class="title">Cyber Command — Liber8tion</div>
+          <div class="preview"><em>lab1.png</em></div>
+          <p class="desc">Timeline, IOC extraction, and answer rationale.</p>
+          <div class="actions">
+            <a href="#" class="btn">Write-up</a>
+          </div>
+        </article>
+        <article class="card">
+          <div class="title">SKY Log Analysis</div>
+          <div class="preview"><em>lab2.png</em></div>
+          <p class="desc">Parsing approach, detection logic, and remediations.</p>
+          <div class="actions">
+            <a href="#" class="btn">Write-up</a>
+          </div>
+        </article>
+        <article class="card">
+          <div class="title">NotPetya Wallet Analysis</div>
+          <div class="preview"><em>lab3.png</em></div>
+          <p class="desc">Indicators and wallet tracing notes.</p>
+          <div class="actions">
+            <a href="#" class="btn">Write-up</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- WRITING PANEL -->
+    <section id="panel-writing" class="panel" aria-labelledby="writing">
+      <details open>
+        <summary>Securing a Student Web App: DJS Hardening</summary>
+        <p>Threat modeling → mitigations → residual risk. Covers CSP pitfalls, auth flows, and sanitized DB access.</p>
+        <a href="#" class="btn">Read</a>
+      </details>
+      <details>
+        <summary>“Signal, not noise”: Tuning Suricata</summary>
+        <p>Approach to FP reduction, rule sources, and EveBox triage that doesn’t drown the analyst.</p>
+        <a href="#" class="btn">Read</a>
+      </details>
+    </section>
   </div>
 
-  <script>
-    // Simple carousel logic (no jQuery/Bootstrap)
-    const track = document.getElementById('track');
-    const slides = Array.from(track.children);
-    let index = 0;
-    const move = (i)=>{ index = (i+slides.length)%slides.length; track.style.transform = `translateX(-${index*100}%)` };
-    document.getElementById('prev').onclick = ()=>move(index-1);
-    document.getElementById('next').onclick = ()=>move(index+1);
+  <!-- MODALS (open via #id links) -->
+  <div class="modal" id="modal-suricata" aria-modal="true" role="dialog">
+    <div class="dialog">
+      <a href="#" class="close" aria-label="Close">×</a>
+      <h3>Suricata Rule Pack</h3>
+      <p>• Coverage: common web attacks, suspected C2 beacons<br>
+         • Artifacts: ruleset, EveBox dashboards, tuning notes<br>
+         • Outcome: drastic FP reduction on home traffic + replay pcap set</p>
+      <div class="actions">
+        <a class="btn" href="#" target="_blank" rel="noopener">GitHub</a>
+        <a class="btn" href="#" target="_blank" rel="noopener">Write-up</a>
+      </div>
+    </div>
+  </div>
 
-    // Year + Resume link
+  <div class="modal" id="modal-djs" aria-modal="true" role="dialog">
+    <div class="dialog">
+      <a href="#" class="close" aria-label="Close">×</a>
+      <h3>Discount Juice Shop (hardened)</h3>
+      <p>• Auth fixes, parameterized SQL, CSP, and validation<br>
+         • Mapped to OWASP Top 10 with test cases<br>
+         • Screens + attack/defense notes included</p>
+      <div class="actions">
+        <a class="btn" href="#" target="_blank" rel="noopener">GitHub</a>
+        <a class="btn" href="#" target="_blank" rel="noopener">Live</a>
+        <a class="btn" href="#" target="_blank" rel="noopener">Write-up</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- SKILLS -->
+  <section class="wrap" id="skills" style="margin-top:28px">
+    <h2>Skills</h2>
+    <div class="cards">
+      <article class="card">
+        <div class="title">Networking & Ops</div>
+        <p class="desc">pfSense/OPNsense, VLANs, Linux, Docker/Compose, Portainer.</p>
+        <div class="meta">
+          <span class="chip">Nmap</span><span class="chip">Wireshark</span><span class="chip">Zeek (basics)</span>
+        </div>
+      </article>
+      <article class="card">
+        <div class="title">Detection & SIEM</div>
+        <p class="desc">Suricata, EveBox, Wazuh, Splunk; alert triage & dashboards.</p>
+        <div class="meta">
+          <span class="chip">Tuning</span><span class="chip">Pcaps</span><span class="chip">Dashboards</span>
+        </div>
+      </article>
+      <article class="card">
+        <div class="title">AppSec</div>
+        <p class="desc">OWASP Top 10, threat modeling, auth, validation, CSP.</p>
+        <div class="meta">
+          <span class="chip">Node/Express</span><span class="chip">Python (utility)</span><span class="chip">Git/GitHub</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="wrap" id="contact" style="margin-top:28px">
+    <h2>Contact</h2>
+    <div class="cards">
+      <article class="card" style="align-items:flex-start">
+        <p class="desc">Want the full write-ups, a quick look at the homelab, or my resume?</p>
+        <div class="actions">
+          <a class="btn" href="mailto:stfn@example.com">Email</a>
+          <a class="btn" href="#" target="_blank" rel="noopener">GitHub</a>
+          <a class="btn" href="#" target="_blank" rel="noopener">LinkedIn</a>
+          <a class="btn" href="#" target="_blank" rel="noopener">Resume (PDF)</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <footer>
+    © <span id="year"></span> stfn • Built with HTML/CSS only • Hosted on GitHub Pages
+  </footer>
+
+  <script>
+    /* Not required, but this tiny line sets the year. Remove if you want 100% CSS-only. */
     document.getElementById('year').textContent = new Date().getFullYear();
-    document.getElementById('resumeLink').href = '#'; // set your PDF
   </script>
 </body>
 </html>
