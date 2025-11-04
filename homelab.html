@@ -1,48 +1,144 @@
+
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Homelab • stfn.lol</title>
-  <meta name="description" content="Static template for GitHub Pages." />
+  <meta name="color-scheme" content="light dark" />
+  <title>Homelab • mysite</title>
   <link rel="stylesheet" href="assets/css/style.css" />
 </head>
 <body>
   <header class="site-header">
-    <nav class="container nav">
-      <a class="brand" href="index.html">stfn.lol</a>
+    <nav class="nav container">
+      <a class="brand" href="index.html">mysite</a>
       <ul class="nav-links">
         <li><a href="about.html">About</a></li>
-        <li><a href="homelab.html">Homelab</a></li>
+        <li><a href="homelab.html" aria-current="page">Homelab</a></li>
         <li><a href="projects.html">Projects</a></li>
         <li><a href="labs.html">Labs</a></li>
         <li><a href="resume.html">Resume</a></li>
         <li><a href="contact.html">Contact</a></li>
       </ul>
     </nav>
+    
   </header>
+
   <main class="container">
 
-<section class="page">
-  <h1>Homelab</h1>
-  <p>Template sections (fill in later):</p>
-  <h2>Overview</h2>
-  <p>Goals, hardware, OS.</p>
-  <h2>Network Topology</h2>
-  <p>Add a diagram image here.</p>
-  <h2>Core Services</h2>
-  <ul>
-    <li>DNS / Reverse Proxy</li>
-    <li>Monitoring / Logging</li>
-    <li>Backups / Automation</li>
-  </ul>
-</section>
+    <section class="page">
+      <h1 class="fade-in">Homelab Overview</h1>
+      <p class="fade-in delay-1">
+        This homelab is my personal infrastructure — designed for simplicity, reliability, and full control.
+        Every service runs in a Docker container, managed through <strong>Portainer</strong> for quick deployment
+        and effortless maintenance.
+      </p>
+
+      <div class="cards three fade-in delay-2">
+        <article class="card hover-up">
+          <h3>🧭 Network & Management</h3>
+          <p><strong>AdGuard Home</strong> filters DNS traffic across the network, keeping browsing fast and private.
+          <strong>NetAlertX</strong> monitors all connected devices in real time, tracking uptime and changes.</p>
+        </article>
+
+        <article class="card hover-up delay-1">
+          <h3>📊 Monitoring & Visualization</h3>
+          <p><strong>Glances</strong> gives instant insight into CPU, RAM, and system health, while <strong>Heimdall</strong>
+          acts as a polished dashboard to access and organize all services in one view.</p>
+        </article>
+
+        <article class="card hover-up delay-2">
+          <h3>⚙️ Automation & Storage</h3>
+          <p><strong>FileBrowser</strong> offers easy, web-based file management.
+          <strong>Watchtower</strong> automates container updates silently in the background, and 
+          <strong>Speedtest Tracker</strong> logs connection performance to ensure the network stays consistent and fast.</p>
+        </article>
+      </div>
+
+      <p class="fade-in delay-3">
+        The result is a modular, self-hosted ecosystem — efficient, transparent, and built to evolve.
+      </p>
+    </section>
+
+    <section class="page fade-in delay-3">
+      <h2>Service Status</h2>
+      <div class="status-grid">
+        <div class="status-item"><span class="dot online"></span> AdGuard Home</div>
+        <div class="status-item"><span class="dot online"></span> FileBrowser</div>
+        <div class="status-item"><span class="dot online"></span> Glances</div>
+        <div class="status-item"><span class="dot online"></span> Heimdall</div>
+        <div class="status-item"><span class="dot online"></span> KeeWeb</div>
+        <div class="status-item"><span class="dot online"></span> NetAlertX</div>
+        <div class="status-item"><span class="dot online"></span> Portainer</div>
+        <div class="status-item"><span class="dot online"></span> Speedtest Tracker</div>
+        <div class="status-item"><span class="dot online"></span> Speedtest Scheduler</div>
+        <div class="status-item"><span class="dot online"></span> Watchtower</div>
+      </div>
+    </section>
 
   </main>
+
   <footer class="site-footer">
     <div class="container">
-      <p>© 2025 • Static template • GitHub Pages ready</p>
+      <p>© 2025 • mysite</p>
     </div>
   </footer>
+
+  <style>
+  .fade-in {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInUp 0.6s ease forwards;
+  }
+  .fade-in.delay-1 { animation-delay: 0.2s; }
+  .fade-in.delay-2 { animation-delay: 0.4s; }
+  .fade-in.delay-3 { animation-delay: 0.6s; }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hover-up {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .hover-up:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  }
+
+  .status-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px 16px;
+    margin-top: 12px;
+  }
+
+  .status-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    background: var(--card);
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    transition: background 0.3s ease;
+  }
+
+  .status-item:hover {
+    background: color-mix(in oklab, var(--card) 80%, var(--accent));
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .dot.online { background: #00d084; }
+  .dot.offline { background: #ff4d4d; }
+  .dot.updating { background: #ffcc00; }
+  </style>
 </body>
 </html>
